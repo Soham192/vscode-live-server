@@ -1,0 +1,52 @@
+document.getElementById('bmi-form').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent the form from submitting in the default way
+
+    // Get input values for BMI calculation
+    const weight = parseFloat(document.getElementById('weight').value);
+    const height = parseFloat(document.getElementById('height').value) / 100; // Convert cm to meters
+
+    // Get input values for nutritional tracking
+    const numItems = parseInt(document.getElementById('items').value, 10);
+    const caloriesPerItem = parseFloat(document.getElementById('calories').value) || 0;
+    const proteinPerItem = parseFloat(document.getElementById('protein').value) || 0;
+    const carbsPerItem = parseFloat(document.getElementById('carbs').value) || 0;
+    const fatPerItem = parseFloat(document.getElementById('fat').value) || 0;
+
+    // Check if values are valid
+    if (isNaN(weight) || isNaN(height) || height <= 0 || isNaN(numItems) || numItems <= 0) {
+        document.getElementById('result').innerHTML = '<p style="color: red;">Please enter valid weight, height, and number of items.</p>';
+        return;
+    }
+
+    // Calculate BMI
+    const bmi = weight / (height * height);
+
+    // Determine the BMI category
+    let category = '';
+    if (bmi < 18.5) {
+        category = 'Underweight';
+    } else if (bmi < 24.9) {
+        category = 'Normal weight';
+    } else if (bmi < 29.9) {
+        category = 'Overweight';
+    } else {
+        category = 'Obesity';
+    }
+
+    // Calculate total nutritional values
+    const totalCalories = numItems * caloriesPerItem;
+    const totalProtein = numItems * proteinPerItem;
+    const totalCarbs = numItems * carbsPerItem;
+    const totalFat = numItems * fatPerItem;
+
+    // Display the result
+    document.getElementById('result').innerHTML = `
+        <h2>Your BMI: ${bmi.toFixed(2)}</h2>
+        <p>Category: ${category}</p>
+        <h3>Nutritional Information</h3>
+        <p>Total Calories: ${totalCalories.toFixed(2)}</p>
+        <p>Total Protein: ${totalProtein.toFixed(2)} g</p>
+        <p>Total Carbs: ${totalCarbs.toFixed(2)} g</p>
+        <p>Total Fat: ${totalFat.toFixed(2)} g</p>
+    `;
+});
